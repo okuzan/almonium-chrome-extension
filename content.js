@@ -1,5 +1,8 @@
-// Global variable to store the currently displayed icon
+const ICON_TIMEOUT_DURATION = 3000; // 3 seconds
+
+// Global variables to store the currently displayed icon and its timeout
 let currentIcon = null;
+let iconTimeout = null;
 
 // Function to display the icon near the selected text and make it clickable
 function showIconNearSelection() {
@@ -13,14 +16,16 @@ function showIconNearSelection() {
                 if (currentIcon) {
                     currentIcon.remove();
                     currentIcon = null;
+                    clearTimeout(iconTimeout);  // Clear any existing timeout
                 }
                 return;  // Do not show icon if selection exceeds 300 characters
             }
 
-            // Clear the previous icon if one exists
+            // Clear the previous icon and timeout if one exists
             if (currentIcon) {
                 currentIcon.remove();
-                currentIcon = null;  // Reset the currentIcon reference
+                currentIcon = null;
+                clearTimeout(iconTimeout);  // Clear any existing timeout
             }
 
             if (selection.rangeCount > 0) {
@@ -69,6 +74,7 @@ function showIconNearSelection() {
                         chrome.runtime.sendMessage({action: "openTab", text: selectedText}, function (response) {
                             console.log("Message sent to background.js", response); // Log the response
                         });
+                        clearTimeout(iconTimeout);  // Clear timeout if icon is clicked
                     }
                 });
 
@@ -88,6 +94,14 @@ function showIconNearSelection() {
 
                 // Store reference to the current icon so it can be removed later
                 currentIcon = icon;
+
+                // Set a timeout to remove the icon after 4 seconds
+                iconTimeout = setTimeout(() => {
+                    if (currentIcon) {
+                        currentIcon.remove();
+                        currentIcon = null;
+                    }
+                }, ICON_TIMEOUT_DURATION); // 3 seconds timeout
             }
         }
     });
@@ -102,6 +116,7 @@ document.addEventListener('mouseup', () => {
         if (currentIcon) {
             currentIcon.remove();
             currentIcon = null;
+            clearTimeout(iconTimeout);  // Clear any existing timeout
         }
         return;  // Exit if no text is selected
     }
