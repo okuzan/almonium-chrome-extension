@@ -6,8 +6,11 @@ let iconTimeout = null;
 
 // Function to display the icon near the selected text and make it clickable
 function showIconNearSelection() {
-    chrome.runtime.sendMessage({action: "checkFloatingIconState"}, function (response) {
-        if (response.isEnabled) {
+    // Check if floating icon is enabled in storage
+    chrome.storage.local.get('isFloatingIconEnabled', function (data) {
+        const isEnabled = data.isFloatingIconEnabled ?? true; // Default to true
+
+        if (isEnabled) {
             const selection = window.getSelection();
             const selectedText = selection.toString().trim();
 
