@@ -14,6 +14,19 @@ function showIconNearSelection() {
             const selection = window.getSelection();
             const selectedText = selection.toString().trim();
 
+            // Get the selected element (or node)
+            const selectedElement = selection.anchorNode.parentElement;
+
+            // Exclude input fields, text areas, or form-related elements
+            if (selectedElement.tagName === 'INPUT' || selectedElement.tagName === 'TEXTAREA' || selectedElement.closest('form')) {
+                if (currentIcon) {
+                    currentIcon.remove();
+                    currentIcon = null;
+                    clearTimeout(iconTimeout);  // Clear any existing timeout
+                }
+                return;  // Do not show icon if selected inside a form element
+            }
+
             // Check if the selected text exceeds 300 characters
             if (selectedText.length > 300) {
                 if (currentIcon) {
