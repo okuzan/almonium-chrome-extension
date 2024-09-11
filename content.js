@@ -1,4 +1,5 @@
 const ICON_TIMEOUT_DURATION = 3000; // 3 seconds
+const MAX_CHARACTERS = 300;
 
 // Global variables to store the currently displayed icon and its timeout
 let currentIcon = null;
@@ -28,7 +29,7 @@ function showIconNearSelection() {
             }
 
             // Check if the selected text exceeds 300 characters
-            if (selectedText.length > 300) {
+            if (selectedText.length > MAX_CHARACTERS) {
                 if (currentIcon) {
                     currentIcon.remove();
                     currentIcon = null;
