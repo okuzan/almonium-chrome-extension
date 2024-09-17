@@ -41,7 +41,7 @@ function makeApiRequest(sendResponse) {
 
 // Function to refresh the token
 function refreshToken(sendResponse) {
-    fetch("https://api.almonium.com/api/v1/refresh", {
+    fetch("https://api.almonium.com/api/v1/public/refresh-token", {
         method: "POST",
         credentials: "include"  // Ensures cookies are sent
     })
